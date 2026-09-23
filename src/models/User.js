@@ -61,6 +61,13 @@ const userSchema = new mongoose.Schema(
         type: Date,
         default: null
       }
+    },
+
+    fishing: {
+      lastFish: {
+        type: Date,
+        default: null
+      }
     }
   },
   {
