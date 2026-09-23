@@ -19,7 +19,9 @@ module.exports = {
       return message.reply("❌ That's not a valid amount.");
     }
 
-    let user = await User.findOne({ userId: message.author.id });
+    let user = await User.findOne({
+      userId: message.author.id
+    });
 
     if (!user) {
       user = await User.create({
@@ -27,16 +29,20 @@ module.exports = {
       });
     }
 
-    const wallet = BigInt(user.wallet.toString().split(".")[0]);
+    const wallet = BigInt(user.wallet || "0");
+    const bank = BigInt(user.bank || "0");
 
     if (amount > wallet) {
-      return message.reply("❌ You don't have enough money in your wallet.");
+      return message.reply(
+        "❌ You don't have enough money in your wallet."
+      );
     }
 
-    const bank = BigInt(user.bank.toString().split(".")[0]);
+    const newWallet = wallet - amount;
+    const newBank = bank + amount;
 
-    user.wallet = (wallet - amount).toString();
-    user.bank = (bank + amount).toString();
+    user.wallet = newWallet.toString();
+    user.bank = newBank.toString();
 
     await user.save();
 
@@ -44,12 +50,14 @@ module.exports = {
       .setTitle("🏦 Deposit")
       .setDescription(
         `Deposited **$${amount.toLocaleString()}** into your bank.\n\n` +
-        `💵 Wallet: **$${(wallet - amount).toLocaleString()}**\n` +
-        `🏦 Bank: **$${(bank + amount).toLocaleString()}**`
+        `💵 Wallet: **$${newWallet.toLocaleString()}**\n` +
+        `🏦 Bank: **$${newBank.toLocaleString()}**`
       )
       .setColor(0x2b2d31)
       .setTimestamp();
 
-    await message.reply({ embeds: [embed] });
+    await message.reply({
+      embeds: [embed]
+    });
   }
 };
