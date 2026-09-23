@@ -39,23 +39,28 @@ function parseAmount(input) {
     return null;
   }
 
-  let value = String(input)
+  const value = String(input)
     .trim()
     .toLowerCase()
     .replace(/,/g, "");
 
-  const match = value.match(/^(\d+(?:\.\d+)?)([a-z]+)?$/);
+  const match = value.match(/^(\d+)(?:\.(\d+))?([a-z]+)?$/);
 
   if (!match) {
     return null;
   }
 
-  const number = match[1];
-  const suffix = match[2] || "";
+  const whole = match[1];
+  const decimal = match[2] || "";
+  const suffix = match[3] || "";
 
   if (!suffix) {
+    if (decimal.length > 0) {
+      return null;
+    }
+
     try {
-      return BigInt(number);
+      return BigInt(whole);
     } catch {
       return null;
     }
@@ -63,20 +68,17 @@ function parseAmount(input) {
 
   const power = SUFFIXES[suffix];
 
-  if (power === undefined) {
+  if (power === undefined || decimal.length > power) {
     return null;
   }
-
-  const [whole, decimal = ""] = number.split(".");
-
-  if (decimal.length > power) {
-    return null;
-  }
-
-  const paddedDecimal = decimal.padEnd(power, "0");
 
   try {
-    return BigInt(whole + paddedDecimal) * 10n ** BigInt(power - decimal.length);
+    const scale = 10n ** BigInt(power);
+    const decimalValue = decimal
+      ? BigInt(decimal.padEnd(power, "0"))
+      : 0n;
+
+    return BigInt(whole) * scale + decimalValue;
   } catch {
     return null;
   }
