@@ -1,1 +1,1 @@
-.
+console.log("Kagami is starting...");
