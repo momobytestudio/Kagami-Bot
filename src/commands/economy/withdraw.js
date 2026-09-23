@@ -7,18 +7,6 @@ module.exports = {
   aliases: ["with", "wd"],
 
   async execute(message, args) {
-    if (!args[0]) {
-      return message.reply(
-        "❌ Please specify an amount. Example: `,withdraw 100k`"
-      );
-    }
-
-    const amount = parseAmount(args[0]);
-
-    if (amount === null || amount <= 0n) {
-      return message.reply("❌ That's not a valid amount.");
-    }
-
     let user = await User.findOne({
       userId: message.author.id
     });
@@ -29,15 +17,32 @@ module.exports = {
       });
     }
 
+    const wallet = BigInt(user.wallet || "0");
     const bank = BigInt(user.bank || "0");
+
+    if (!args[0]) {
+      return message.reply(
+        "❌ Please specify an amount. Example: `,withdraw 100k` or `,withdraw all`"
+      );
+    }
+
+    let amount;
+
+    if (args[0].toLowerCase() === "all") {
+      amount = bank;
+    } else {
+      amount = parseAmount(args[0]);
+    }
+
+    if (amount === null || amount <= 0n) {
+      return message.reply("❌ That's not a valid amount.");
+    }
 
     if (amount > bank) {
       return message.reply(
         "❌ You don't have enough money in your bank."
       );
     }
-
-    const wallet = BigInt(user.wallet || "0");
 
     const newBank = bank - amount;
     const newWallet = wallet + amount;
