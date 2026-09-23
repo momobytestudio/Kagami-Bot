@@ -9,23 +9,13 @@ const userSchema = new mongoose.Schema(
     },
 
     wallet: {
-      type: mongoose.Schema.Types.Decimal128,
+      type: String,
       default: "0"
     },
 
     bank: {
-      type: mongoose.Schema.Types.Decimal128,
+      type: String,
       default: "0"
-    },
-
-    xp: {
-      type: Number,
-      default: 0
-    },
-
-    level: {
-      type: Number,
-      default: 1
     },
 
     inventory: {
