@@ -6,7 +6,9 @@ module.exports = {
   aliases: ["d"],
 
   async execute(message) {
-    let user = await User.findOne({ userId: message.author.id });
+    let user = await User.findOne({
+      userId: message.author.id
+    });
 
     if (!user) {
       user = await User.create({
@@ -22,24 +24,27 @@ module.exports = {
 
       if (elapsed < cooldown) {
         const remaining = cooldown - elapsed;
-        const hours = Math.floor(remaining / (60 * 60 * 1000));
+
+        const hours = Math.floor(
+          remaining / (60 * 60 * 1000)
+        );
+
         const minutes = Math.floor(
           (remaining % (60 * 60 * 1000)) / (60 * 1000)
         );
 
         return message.reply(
-          `⏳ You already claimed your daily reward. Try again in **${hours}h ${minutes}m**.`
+          `⏳ You already claimed your daily reward. ` +
+          `Try again in **${hours}h ${minutes}m**.`
         );
       }
     }
 
     const reward = 100000n;
+    const currentWallet = BigInt(user.wallet || "0");
+    const newWallet = currentWallet + reward;
 
-    const currentWallet = BigInt(
-      user.wallet ? user.wallet.toString().split(".")[0] : "0"
-    );
-
-    user.wallet = (currentWallet + reward).toString();
+    user.wallet = newWallet.toString();
     user.daily.lastClaim = new Date();
     user.daily.streak += 1;
 
@@ -49,12 +54,14 @@ module.exports = {
       .setTitle("🎁 Daily Reward")
       .setDescription(
         `You received **$${reward.toLocaleString()}**!\n\n` +
-        `💵 Wallet: **$${(currentWallet + reward).toLocaleString()}**\n` +
+        `💵 Wallet: **$${newWallet.toLocaleString()}**\n` +
         `🔥 Streak: **${user.daily.streak}**`
       )
       .setColor(0x2b2d31)
       .setTimestamp();
 
-    await message.reply({ embeds: [embed] });
+    await message.reply({
+      embeds: [embed]
+    });
   }
 };
