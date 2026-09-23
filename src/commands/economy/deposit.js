@@ -7,18 +7,6 @@ module.exports = {
   aliases: ["dep", "bank"],
 
   async execute(message, args) {
-    if (!args[0]) {
-      return message.reply(
-        "❌ Please specify an amount. Example: `,deposit 100k`"
-      );
-    }
-
-    const amount = parseAmount(args[0]);
-
-    if (amount === null || amount <= 0n) {
-      return message.reply("❌ That's not a valid amount.");
-    }
-
     let user = await User.findOne({
       userId: message.author.id
     });
@@ -31,6 +19,24 @@ module.exports = {
 
     const wallet = BigInt(user.wallet || "0");
     const bank = BigInt(user.bank || "0");
+
+    if (!args[0]) {
+      return message.reply(
+        "❌ Please specify an amount. Example: `,deposit 100k` or `,deposit all`"
+      );
+    }
+
+    let amount;
+
+    if (args[0].toLowerCase() === "all") {
+      amount = wallet;
+    } else {
+      amount = parseAmount(args[0]);
+    }
+
+    if (amount === null || amount <= 0n) {
+      return message.reply("❌ That's not a valid amount.");
+    }
 
     if (amount > wallet) {
       return message.reply(
