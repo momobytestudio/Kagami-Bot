@@ -28,6 +28,12 @@ const userSchema = new mongoose.Schema(
         type: Date,
         default: null
       },
+crime: {
+  lastCrime: {
+    type: Date,
+    default: null
+  }
+}
 
       streak: {
         type: Number,
