@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 const User = require("../../models/User");
+const formatNumber = require("../../utils/numberFormatter");
 
 module.exports = {
   name: "credits",
@@ -22,7 +23,7 @@ module.exports = {
       .setTitle("🪙 Kagami Credits")
       .setDescription(
         `**${message.author.username}**, you currently have:\n\n` +
-        `🪙 **${credits.toLocaleString()} Credits**`
+        `🪙 **${formatNumber(credits)} Credits**`
       )
       .setColor(0x2b2d31)
       .setTimestamp();
