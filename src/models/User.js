@@ -18,6 +18,11 @@ const userSchema = new mongoose.Schema(
       default: "0"
     },
 
+    credits: {
+      type: String,
+      default: "0"
+    },
+
     inventory: {
       type: [String],
       default: []
