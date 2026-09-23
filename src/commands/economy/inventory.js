@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 const User = require("../../models/User");
+const shopItems = require("../../utils/shopItems");
 
 module.exports = {
   name: "inventory",
@@ -20,12 +21,20 @@ module.exports = {
 
     const itemCounts = {};
 
-    for (const item of user.inventory) {
-      itemCounts[item] = (itemCounts[item] || 0) + 1;
+    for (const itemId of user.inventory) {
+      itemCounts[itemId] = (itemCounts[itemId] || 0) + 1;
     }
 
     const lines = Object.entries(itemCounts).map(
-      ([item, amount]) => `• **${item}** × ${amount}`
+      ([itemId, amount]) => {
+        const item = shopItems.find(
+          (shopItem) => shopItem.id === itemId
+        );
+
+        const name = item ? item.name : itemId;
+
+        return `• **${name}** × ${amount}`;
+      }
     );
 
     const embed = new EmbedBuilder()
@@ -37,6 +46,8 @@ module.exports = {
       })
       .setTimestamp();
 
-    await message.reply({ embeds: [embed] });
+    await message.reply({
+      embeds: [embed]
+    });
   }
 };
