@@ -5,6 +5,7 @@ const {
   ButtonStyle
 } = require("discord.js");
 
+const User = require("../../models/User");
 const shopItems = require("../../utils/shopItems");
 
 module.exports = {
@@ -15,34 +16,53 @@ module.exports = {
     const itemsPerPage = 5;
     let page = 0;
 
-    const getEmbed = () => {
-      const start = page * itemsPerPage;
-      const items = shopItems.slice(start, start + itemsPerPage);
+    const maxPage = Math.max(
+      0,
+      Math.ceil(shopItems.length / itemsPerPage) - 1
+    );
 
-      const description = items
-        .map(
-          (item) =>
-            `${item.name}\n` +
-            `💰 **$${item.price.toLocaleString()}**\n` +
-            `${item.description}`
-        )
-        .join("\n\n");
+    const getItems = () => {
+      const start = page * itemsPerPage;
+      return shopItems.slice(start, start + itemsPerPage);
+    };
+
+    const getEmbed = () => {
+      const items = getItems();
 
       return new EmbedBuilder()
         .setTitle("⭐ General Shop")
-        .setDescription(description || "The shop is empty.")
+        .setDescription(
+          items
+            .map(
+              (item) =>
+                `${item.name}\n` +
+                `💰 **$${item.price.toLocaleString()}**\n` +
+                `${item.description}`
+            )
+            .join("\n\n")
+        )
         .setFooter({
-          text: `Page ${page + 1} / ${Math.max(
-            1,
-            Math.ceil(shopItems.length / itemsPerPage)
-          )}`
+          text: `Page ${page + 1} / ${maxPage + 1}`
         })
         .setColor(0x2b2d31)
         .setTimestamp();
     };
 
-    const getRow = () =>
-      new ActionRowBuilder().addComponents(
+    const getRows = () => {
+      const items = getItems();
+
+      const buyRow = new ActionRowBuilder();
+
+      for (const item of items) {
+        buyRow.addComponents(
+          new ButtonBuilder()
+            .setCustomId(`shop_buy_${item.id}`)
+            .setLabel(`Buy ${item.id}`)
+            .setStyle(ButtonStyle.Success)
+        );
+      }
+
+      const navigationRow = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
           .setCustomId("shop_previous")
           .setLabel("◀ Previous")
@@ -53,14 +73,15 @@ module.exports = {
           .setCustomId("shop_next")
           .setLabel("Next ▶")
           .setStyle(ButtonStyle.Secondary)
-          .setDisabled(
-            page >= Math.ceil(shopItems.length / itemsPerPage) - 1
-          )
+          .setDisabled(page === maxPage)
       );
+
+      return [buyRow, navigationRow];
+    };
 
     const reply = await message.reply({
       embeds: [getEmbed()],
-      components: [getRow()]
+      components: getRows()
     });
 
     const collector = reply.createMessageComponentCollector({
@@ -70,7 +91,8 @@ module.exports = {
     collector.on("collect", async (interaction) => {
       if (interaction.user.id !== message.author.id) {
         return interaction.reply({
-          content: "❌ Only the person who opened this shop can use these buttons.",
+          content:
+            "❌ Only the person who opened this shop can use these buttons.",
           ephemeral: true
         });
       }
@@ -83,9 +105,61 @@ module.exports = {
         page++;
       }
 
+      if (interaction.customId.startsWith("shop_buy_")) {
+        const itemId = interaction.customId.replace("shop_buy_", "");
+
+        const item = shopItems.find(
+          (shopItem) => shopItem.id === itemId
+        );
+
+        if (!item) {
+          return interaction.reply({
+            content: "❌ That item no longer exists.",
+            ephemeral: true
+          });
+        }
+
+        let user = await User.findOne({
+          userId: interaction.user.id
+        });
+
+        if (!user) {
+          user = await User.create({
+            userId: interaction.user.id
+          });
+        }
+
+        const wallet = BigInt(
+          user.wallet?.toString().split(".")[0] || "0"
+        );
+
+        const price = BigInt(item.price);
+
+        if (wallet < price) {
+          return interaction.reply({
+            content:
+              `❌ You need **$${price.toLocaleString()}** but only have ` +
+              `**$${wallet.toLocaleString()}**.`,
+            ephemeral: true
+          });
+        }
+
+        user.wallet = (wallet - price).toString();
+        user.inventory.push(item.id);
+
+        await user.save();
+
+        return interaction.reply({
+          content:
+            `⭐ You bought **${item.name}** for ` +
+            `**$${price.toLocaleString()}**!`,
+          ephemeral: true
+        });
+      }
+
       await interaction.update({
         embeds: [getEmbed()],
-        components: [getRow()]
+        components: getRows()
       });
     });
 
