@@ -54,6 +54,13 @@ const userSchema = new mongoose.Schema(
         type: Date,
         default: null
       }
+    },
+
+    beg: {
+      lastBeg: {
+        type: Date,
+        default: null
+      }
     }
   },
   {
