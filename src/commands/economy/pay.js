@@ -35,7 +35,9 @@ module.exports = {
       return message.reply("❌ That's not a valid amount.");
     }
 
-    let sender = await User.findOne({ userId: message.author.id });
+    let sender = await User.findOne({
+      userId: message.author.id
+    });
 
     if (!sender) {
       sender = await User.create({
@@ -43,7 +45,9 @@ module.exports = {
       });
     }
 
-    let receiver = await User.findOne({ userId: target.id });
+    let receiver = await User.findOne({
+      userId: target.id
+    });
 
     if (!receiver) {
       receiver = await User.create({
@@ -51,20 +55,21 @@ module.exports = {
       });
     }
 
-    const senderWallet = BigInt(
-      sender.wallet.toString().split(".")[0]
-    );
+    const senderWallet = BigInt(sender.wallet || "0");
 
     if (amount > senderWallet) {
-      return message.reply("❌ You don't have enough money in your wallet.");
+      return message.reply(
+        "❌ You don't have enough money in your wallet."
+      );
     }
 
-    const receiverWallet = BigInt(
-      receiver.wallet.toString().split(".")[0]
-    );
+    const receiverWallet = BigInt(receiver.wallet || "0");
 
-    sender.wallet = (senderWallet - amount).toString();
-    receiver.wallet = (receiverWallet + amount).toString();
+    const newSenderWallet = senderWallet - amount;
+    const newReceiverWallet = receiverWallet + amount;
+
+    sender.wallet = newSenderWallet.toString();
+    receiver.wallet = newReceiverWallet.toString();
 
     await sender.save();
     await receiver.save();
@@ -73,11 +78,13 @@ module.exports = {
       .setTitle("💸 Money Sent")
       .setDescription(
         `You sent **$${amount.toLocaleString()}** to ${target}.\n\n` +
-        `💵 Your wallet: **$${(senderWallet - amount).toLocaleString()}**`
+        `💵 Your wallet: **$${newSenderWallet.toLocaleString()}**`
       )
       .setColor(0x2b2d31)
       .setTimestamp();
 
-    await message.reply({ embeds: [embed] });
+    await message.reply({
+      embeds: [embed]
+    });
   }
 };
