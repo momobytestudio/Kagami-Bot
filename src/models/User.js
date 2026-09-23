@@ -47,6 +47,13 @@ const userSchema = new mongoose.Schema(
         type: Date,
         default: null
       }
+    },
+
+    rob: {
+      lastRob: {
+        type: Date,
+        default: null
+      }
     }
   },
   {
