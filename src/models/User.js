@@ -68,6 +68,13 @@ const userSchema = new mongoose.Schema(
         type: Date,
         default: null
       }
+    },
+
+    coinflip: {
+      lastFlip: {
+        type: Date,
+        default: null
+      }
     }
   },
   {
