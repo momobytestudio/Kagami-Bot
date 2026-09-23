@@ -33,9 +33,13 @@ module.exports = {
       }
     }
 
-    const reward = 100000;
+    const reward = 100000n;
 
-    user.wallet += reward;
+    const currentWallet = BigInt(
+      user.wallet ? user.wallet.toString().split(".")[0] : "0"
+    );
+
+    user.wallet = (currentWallet + reward).toString();
     user.daily.lastClaim = new Date();
     user.daily.streak += 1;
 
@@ -45,7 +49,7 @@ module.exports = {
       .setTitle("🎁 Daily Reward")
       .setDescription(
         `You received **$${reward.toLocaleString()}**!\n\n` +
-        `💵 Wallet: **$${user.wallet.toLocaleString()}**\n` +
+        `💵 Wallet: **$${(currentWallet + reward).toLocaleString()}**\n` +
         `🔥 Streak: **${user.daily.streak}**`
       )
       .setColor(0x2b2d31)
