@@ -6,10 +6,12 @@ module.exports = {
   aliases: ["slb"],
 
   async execute(message) {
-    const members = await message.guild.members.fetch();
+    const memberIds = message.guild.members.cache
+      .filter((member) => !member.user.bot)
+      .map((member) => member.id);
 
     const users = await User.find({
-      userId: { $in: [...members.keys()] }
+      userId: { $in: memberIds }
     }).lean();
 
     users.sort((a, b) => {
@@ -35,7 +37,9 @@ module.exports = {
     }
 
     const lines = topUsers.map((user, index) => {
-      const member = members.get(user.userId);
+      const member = message.guild.members.cache.get(
+        user.userId
+      );
 
       const wallet = BigInt(user.wallet || "0");
       const bank = BigInt(user.bank || "0");
