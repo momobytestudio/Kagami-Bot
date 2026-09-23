@@ -33,6 +33,13 @@ const userSchema = new mongoose.Schema(
         type: Number,
         default: 0
       }
+    },
+
+    work: {
+      lastWork: {
+        type: Date,
+        default: null
+      }
     }
   },
   {
