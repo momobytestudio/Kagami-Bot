@@ -1,8 +1,8 @@
-Kagami-Bot
-
-Kagami is a Discord economy bot designed to bring a fun and interactive economy experience to your server.
-
-Built for having fun with friends, Kagami includes a variety of economy, gambling, social, and progression features — with more being developed during the beta.
+<p align="center">
+  <img src="assets/images/kagami-banner.png.jpg" alt="Kagami-Bot Banner">
+</p><h1 align="center">Kagami-Bot</h1><p align="center">
+  A fun and interactive Discord economy bot for you and your friends.
+</p>---
 
 ✨ Features
 
@@ -55,7 +55,7 @@ https://momobytestudio.github.io/Kagami-Bot/
 
 MomoByte Studio™
 
-Made with Node.js.
+Made with node.js.
 
 ---
 
