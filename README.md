@@ -46,10 +46,10 @@ Some features may change, be temporarily unavailable, or receive major improveme
 GitHub Pages:
 https://momobytestudio.github.io/Kagami-Bot/
 
-📜 Legal
+## 📜 Legal
 
-- "Terms of Service" (TERMS_OF_SERVICE.md)
-- "Privacy Policy" (PRIVACY_POLICY.md)
+- [Terms of Service](TERMS_OF_SERVICE.md)
+- [Privacy Policy](PRIVACY_POLICY.md)
 
 🏢 Developer
 
