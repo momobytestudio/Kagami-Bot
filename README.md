@@ -2,7 +2,7 @@
   <img src="assets/images/kagami-banner.png.jpg" alt="Kagami-Bot Banner">
 </p><h1 align="center">Kagami-Bot</h1><p align="center">
   A fun and interactive Discord economy bot for you and your friends.
-</p>---
+</p>
 
 ✨ Features
 
