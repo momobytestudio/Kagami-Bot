@@ -12,7 +12,7 @@ module.exports = {
     const embed = new EmbedBuilder()
       .setTitle("⭐ Kagami")
       .setDescription(
-        "A global Discord economy bot themed by the Lucky Star."
+        "A global Discord economy bot."
       )
       .addFields(
         {
