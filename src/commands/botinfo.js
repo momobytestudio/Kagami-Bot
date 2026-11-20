@@ -43,14 +43,14 @@ module.exports = {
           inline: true
         },
         {
-          name: "⭐ Theme",
-          value: "Lucky Star",
+          name: "⭐ server",
+          value: "https://discord.gg/fVbK5uGzhN",
           inline: true
         }
       )
       .setColor(0x2b2d31)
       .setFooter({
-        text: "Kagami • Global Economy"
+        text: momobyte"
       })
       .setTimestamp();
 
