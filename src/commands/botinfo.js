@@ -38,7 +38,7 @@ module.exports = {
           inline: true
         },
         {
-          name: "💰 Economy",
+          name: "<:Star_Currency:1572392950460055574> Economy",
           value: "Global economy system",
           inline: true
         },
