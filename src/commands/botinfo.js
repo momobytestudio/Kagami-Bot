@@ -10,7 +10,7 @@ module.exports = {
     const client = message.client;
 
     const embed = new EmbedBuilder()
-      .setTitle("⭐ Kagami")
+      .setTitle("<:KagamiBwaa:1551605541451735202> Kagami")
       .setDescription(
         "A global Discord economy bot."
       )
