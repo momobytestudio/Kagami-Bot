@@ -1,7 +1,7 @@
 Kagami — Privacy Policy
 
 Effective Date: September 23, 2026
-Last Updated: September 23, 2026
+Last Updated: November 20, 2026
 
 This Privacy Policy explains how Kagami collects, uses, stores, protects, and deletes information when you use the Kagami Discord bot.
 
@@ -19,7 +19,7 @@ Kagami is operated by its development team.
 
 For privacy-related questions, requests, or concerns, you may contact the Kagami development team through the official Kagami contact method listed below.
 
-Privacy Contact: "[ADD KAGAMI PRIVACY CONTACT]"
+Privacy Contact: "momobytestudio.games@gmail.com"
 
 If a formal Data Protection Officer or privacy representative is designated in the future, this section may be updated accordingly.
 
