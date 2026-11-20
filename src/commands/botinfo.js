@@ -44,7 +44,7 @@ module.exports = {
         },
         {
           name: "⭐ server",
-          value: "https://discord.gg/fVbK5uGzhN",
+          value: "none yet",
           inline: true
         }
       )
