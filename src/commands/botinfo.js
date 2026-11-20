@@ -1,3 +1,4 @@
+
 const {
   EmbedBuilder
 } = require("discord.js");
@@ -16,24 +17,24 @@ module.exports = {
       )
       .addFields(
         {
-          name: "🤖 Bot",
+          name: "<:icons_i:1508663021885460512> Bot",
           value:
             `Name: **${client.user.username}**\n` +
             `ID: **${client.user.id}**`,
           inline: true
         },
         {
-          name: "📊 Servers",
+          name: "<:Partner:1560657296365846719> Servers",
           value: `**${client.guilds.cache.size}**`,
           inline: true
         },
         {
-          name: "👥 Users",
+          name: "<a:KonataHype:1567705595056754688> Users",
           value: `**${client.users.cache.size}**`,
           inline: true
         },
         {
-          name: "⚙️ Commands",
+          name: "Commands",
           value: "Global prefix: **`,`**",
           inline: true
         },
@@ -43,14 +44,14 @@ module.exports = {
           inline: true
         },
         {
-          name: "⭐ server",
-          value: "none yet",
+          name: "Server",
+          value: "None yet",
           inline: true
         }
       )
       .setColor(0x2b2d31)
       .setFooter({
-        text: momobyte"
+        text: "momobyte"
       })
       .setTimestamp();
 
